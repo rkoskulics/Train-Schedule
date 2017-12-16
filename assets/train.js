@@ -18,8 +18,6 @@ $("#add-train-button").on("click", function(event) {
   var trainDestination = $("#train-destination-input").val().trim();
   var trainTime = moment($("#train-time-input").val().trim(), "HH:mm").format("X");
   var trainFrequency = $("#train-frequency-input").val().trim();
-  // Checks that the button works and it's grabbing the data
-  console.log(trainName, trainDestination, trainTime, trainFrequency);
   // Creates a temporary object to send to firebase
   var newTrain = {
     train: trainName,
@@ -47,11 +45,19 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   var trainTime = childSnapshot.val().time;
   var trainFrequency = childSnapshot.val().frequency;
 
+  // Get the current time and save it as a unix time
+  var rightNow = moment().format("X");
+
+  // Get the time since the first train in unix time.
+  var timeSinceFirst = moment(trainTime).diff(rightNow);
+  console.log(timeSinceFirst);
+  // Calculate the time till the next train and save it as a variable
+  var timeTillNext = timeSinceFirst % trainFrequency;
   // Convert the Unix time to clock time
-  var trainTimePretty = moment.unix(trainTime).format("HH:mm");
+  // var trainTimePretty = moment.unix(trainTime).format("HH:mm");
 
 
   // Puts the data into the HTML
   $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-  trainTimePretty + "</td><td>" + trainFrequency + "</td><td>" + "something" + "</td></tr>");
+  trainFrequency + "</td><td>" + timeTillNext + "</td><td>" + "minutesaway" + "</td></tr>");
 });
