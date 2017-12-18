@@ -45,19 +45,16 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   var trainTime = childSnapshot.val().time;
   var trainFrequency = childSnapshot.val().frequency;
 
-  // Get the current time and save it as a unix time
-  var rightNow = moment().format("X");
+// Need to calculate time to next train.  The equation is in the format:
+// ((now-trainTime) % frequency) drop the remainder, plus now
+var now = moment().format("X");
+var difference = now - trainTime;
+var differenceInMinutes = difference / 60;
 
-  // Get the time since the first train in unix time.
-  var timeSinceFirst = moment(trainTime).diff(rightNow);
-  console.log(timeSinceFirst);
-  // Calculate the time till the next train and save it as a variable
-  var timeTillNext = timeSinceFirst % trainFrequency;
-  // Convert the Unix time to clock time
-  // var trainTimePretty = moment.unix(trainTime).format("HH:mm");
+console.log(differenceInMinutes);
 
 
   // Puts the data into the HTML
   $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-  trainFrequency + "</td><td>" + timeTillNext + "</td><td>" + "minutesaway" + "</td></tr>");
+  trainFrequency + "</td><td>" + "nextTrain" + "</td><td>" + "minutesAway" + "</td></tr>");
 });
