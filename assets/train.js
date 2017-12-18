@@ -46,10 +46,12 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   var trainFrequency = childSnapshot.val().frequency;
 
 // Need to calculate time to next train.  The equation is in the format:
-// ((now-trainTime) % frequency) drop the remainder, plus now
+// ((now-trainTime) % frequency) would give us the remainder.  Frequency - remainder + Now gives us the next train time.
+// Frequency - Remainder gives us time till the next train
 var now = moment().format("X");
 var difference = now - trainTime;
 var differenceInMinutes = difference / 60;
+
 
 console.log(differenceInMinutes);
 
