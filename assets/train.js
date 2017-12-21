@@ -61,9 +61,14 @@ var minutesAway = trainFrequency - remainder;
 var nextTrainUnix = moment().add(minutesAway, "minutes");
 var nextTrain = moment(nextTrainUnix).format("HH:mm");
 
+// If the first train comes in after now, set an if statement to show the correct time.
+if (trainTimeUnix > nowUnixTime) {
+  console.log("train comes later");
+  nextTrain = trainTime;
+  minutesAway = Math.floor((trainTimeUnix - nowUnixTime) / 60);
+  console.log(minutesAway);
+}
 
-
-console.log(differenceInMinutes, remainder);
 
 
   // Puts the data into the HTML
